@@ -13,6 +13,7 @@ import tempfile
 import PySimpleGUI as sg
 import json
 import ctypes, sys
+import uuid
 
 json_path = "system_values.json"
 
@@ -109,8 +110,16 @@ def download_latest_release():
     Returns:
         str: ダウンロードした最新リリースのパス
     """
+    if os.path.exists('AttenDan_release.zip'): # 既存のリリースファイルを削除
+        os.remove('AttenDan_release.zip')
+    if os.path.exists('AttenDan_release'):
+        shutil.rmtree('AttenDan_release')
+        
     print("downloading latest release...")
-    _, _, _, release_url = get_latest_release_info()
+    ret = get_latest_release_info()
+    if isinstance(ret, Exception):
+        return ret
+    _, _, _, release_url = ret
     response = requests.get(release_url)
     
     try:
@@ -161,7 +170,9 @@ def replace_with_latest_release(release_dir_path = "AttenDan_release"):
             item != 'updator.exe' and 
             item != 'AttenDan_release' and 
             item != 'saves' and
-            item != '.git'): # 一部のファイルは削除しない
+            item != '.git' and
+            item != 'unins000.exe' and
+            item != 'unins000.dat'): # 一部のファイルは削除しない
             try:
                 if os.path.isfile(item):
                     os.remove(item)
