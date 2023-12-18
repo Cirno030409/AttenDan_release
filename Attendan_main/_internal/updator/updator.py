@@ -14,8 +14,10 @@ import PySimpleGUI as sg
 import json
 import ctypes, sys
 
+json_path = "system_values.json"
+
 # GitHub APIのURLをロード
-with open('saves/values.json', 'r') as f:
+with open(json_path, 'r') as f:
     api_url = json.load(f)['git_api_url']
 
 def main():
@@ -38,6 +40,9 @@ def main():
         else:
             sg.PopupOK(f'アップデートはキャンセルされました。', title='アテンダン アップデーター', keep_on_top=True)
             return
+    else:
+        sg.PopupOK(f'現在のバージョンは最新版です。', title='アテンダン アップデーター', keep_on_top=True)
+        return
         
 def is_admin(): # 管理者権限を持っているかどうかを確認する
     try:
@@ -85,7 +90,7 @@ def is_exist_update():
     Returns:
         bool: アップデートがあるかどうか
     """
-    values = json.load(open('saves/values.json', 'rb'))
+    values = json.load(open(json_path, 'rb'))
     current_ver = int(values['system_version'].replace('.', '', 2)) 
     latest_release_info = get_latest_release_info()
     if isinstance(latest_release_info, Exception):
