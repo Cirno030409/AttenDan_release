@@ -18,7 +18,7 @@ import uuid
 json_path = "system_values.json"
 
 # GitHub APIのURLをロード
-with open(json_path, 'r') as f:
+with open(json_path, 'r', encoding="utf-8") as f:
     api_url = json.load(f)['git_api_url']
 
 def main():
